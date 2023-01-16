@@ -1,4 +1,5 @@
 ﻿using Buttplug;
+using Buttplug.Client;
 using gamense_ps2.Census;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,6 +43,8 @@ namespace gamense_ps2.Panels {
 
             _ToyWrapper.DeviceAddedEvent += _OnDeviceAdded;
             _ToyWrapper.DeviceRemovedEvent += _OnDeviceRemoved;
+
+            App_Status.Text = "Status: Not connected";
         }
 
         public void Dispose() {
@@ -75,7 +78,10 @@ namespace gamense_ps2.Panels {
             _Logger.LogInformation($"Reconnect");
 
             await _ToyWrapper.Disconnect();
+            App_Status.Text = $"Status: Disconnected";
+
             await _ToyWrapper.Connect();
+            App_Status.Text = $"Status: Connected";
 
             UpdateDeviceList();
         }
@@ -89,11 +95,21 @@ namespace gamense_ps2.Panels {
         }
 
         private async void Button_Connect_Click(object sender, RoutedEventArgs e) {
-            await _ToyWrapper.Connect();
+            try {
+                await _ToyWrapper.Connect();
+                App_Status.Text = $"Status: Connected";
+            } catch (Exception ex) {
+                _Logger.LogError(ex, "failed to connect");
+            }
         }
 
         private async void Button_Disconnect_Click(object sender, RoutedEventArgs e) {
-            await _ToyWrapper.Disconnect();
+            try {
+                await _ToyWrapper.Disconnect();
+                App_Status.Text = $"Status: Disconnected";
+            } catch (Exception ex) {
+                _Logger.LogError(ex, "failed to disconnect");
+            }
         }
 
     }

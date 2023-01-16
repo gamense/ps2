@@ -23,7 +23,7 @@ namespace gamense_ps2 {
         private readonly IHost _Host;
 
         [NotNull]
-        public static IServiceProvider Services;
+        public static IServiceProvider Services = default!;
 
         public App() {
             _Host = Host.CreateDefaultBuilder()

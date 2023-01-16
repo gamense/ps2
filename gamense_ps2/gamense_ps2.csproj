@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Buttplug" Version="2.0.6" />
+    <PackageReference Include="Buttplug" Version="3.0.0" />
+    <PackageReference Include="Buttplug.Client.Connectors.WebsocketConnector" Version="3.0.0" />
     <PackageReference Include="DaybreakGames.Census" Version="3.2.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
@@ -16,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Actions.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -103,7 +103,7 @@ namespace gamense_ps2.Census {
             if (eventName == null) {
                 _Logger.LogWarning($"Missing 'event_name' from: {token}");
             } else if (eventName == "Death") {
-                _Logger.LogInformation($"Death: {token}");
+                _Logger.LogTrace($"Death: {token}");
 
                 string killed = token.GetString("character_id", "0");
                 string attacker = token.GetString("attacker_character_id", "0");
@@ -116,7 +116,7 @@ namespace gamense_ps2.Census {
                 }
 
             } else if (eventName == "GainExperience") {
-                _Logger.LogInformation($"GainExperience: {token}");
+                _Logger.LogTrace($"GainExperience: {token}");
 
                 string source = token.GetString("character_id", "0");
                 string other = token.GetString("other_id", "0");

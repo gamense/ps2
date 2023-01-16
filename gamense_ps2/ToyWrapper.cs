@@ -1,4 +1,6 @@
 ﻿using Buttplug;
+using Buttplug.Client;
+using Buttplug.Client.Connectors.WebsocketConnector;
 using gamense_ps2.Code;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -16,10 +18,14 @@ namespace gamense_ps2 {
         private readonly ILogger<ToyWrapper> _Logger;
 
         private ButtplugClient? _Client = null;
+        private ButtplugWebsocketConnector? _Connector = null;
+
+        private double _CurrentStrengh = 0d;
 
         public ToyWrapper(ILogger<ToyWrapper> logger) {
             _Logger = logger;
 
+            /*
             ButtplugFFILog.SetLogOptions(ButtplugLogLevel.Trace, true);
             ButtplugFFILog.LogMessage += (obj, msg) => {
                 try {
@@ -54,32 +60,18 @@ namespace gamense_ps2 {
                     _Logger.LogError(ex, "failed to parse message");
                 }
             };
+            */
 
+            _Connector = new ButtplugWebsocketConnector(new Uri("ws://localhost:12345/buttplug"));
             _Client = new ButtplugClient("Test client");
 
             _Client.DeviceAdded += (obj, args) => {
-                _Logger.LogInformation($"Added {args.Device.Name}");
-
-                string s = "";
-                foreach (KeyValuePair<ServerMessage.Types.MessageAttributeType, ButtplugMessageAttributes> msg in args.Device.AllowedMessages) {
-                    s += ($"{msg.Key}:{msg.Value}\n");
-
-                    foreach (PropertyDescriptor desc in TypeDescriptor.GetProperties(msg.Value)) {
-                        try {
-                            s += $"\t{desc.Name}/{desc.DisplayName}: {desc.Description}\n";
-                        } catch (Exception ex) {
-                            s += $"\terror: {ex.Message}";
-                        }
-                    }
-                }
-
-                _Logger.LogDebug(s);
-
+                _Logger.LogInformation($"Device added {args.Device.DisplayName}/{args.Device.Name}");
                 DeviceAddedEvent?.Invoke(this, args);
             };
 
             _Client.DeviceRemoved += (obj, args) => {
-                Console.WriteLine($"Removed device: {args.Device.Name}");
+                _Logger.LogInformation($"Device removed: {args.Device.DisplayName}/{args.Device.Name}");
                 DeviceRemovedEvent?.Invoke(this, args);
             };
         }
@@ -90,6 +82,12 @@ namespace gamense_ps2 {
         public delegate void DeviceRemovedHandler(object sender, DeviceRemovedEventArgs e);
         public event DeviceRemovedHandler? DeviceRemovedEvent;
 
+        public delegate void DeviceVibrateChangeHandler(object sender, double newStrength);
+        public event DeviceVibrateChangeHandler? DeviceVibrateChangeEvent;
+
+        /// <summary>
+        ///     Get a list of devices currently connected to the library client
+        /// </summary>
         public List<ButtplugClientDevice> GetDevices() {
             if (_Client == null) {
                 return new List<ButtplugClientDevice>();
@@ -98,10 +96,16 @@ namespace gamense_ps2 {
             return _Client.Devices.ToList();
         }
 
+        /// <summary>
+        ///     Get the library client
+        /// </summary>
         public ButtplugClient? GetClient() {
             return _Client;
         }
 
+        /// <summary>
+        ///     Disconnect from the client
+        /// </summary>
         public async Task Disconnect() {
             if (_Client == null) {
                 return;
@@ -114,17 +118,24 @@ namespace gamense_ps2 {
             }
         }
 
+        /// <summary>
+        ///     Connect to the client
+        /// </summary>
         public async Task Connect() {
             if (_Client == null) {
                 return;
             }
 
-            ButtplugEmbeddedConnectorOptions options = new ButtplugEmbeddedConnectorOptions();
-            await _Client.ConnectAsync(options);
+            await _Client.ConnectAsync(_Connector);
+            _Logger.LogDebug($"connected");
 
             await _Client.StartScanningAsync();
+            _Logger.LogDebug($"starting scan");
         }
 
+        /// <summary>
+        ///     Ping all connected toys by vibrating at 20% for 1 second
+        /// </summary>
         public async Task Ping() {
             if (_Client == null) {
                 return;
@@ -135,14 +146,30 @@ namespace gamense_ps2 {
             await SetVibrate(0d);
         }
 
+        /// <summary>
+        ///     Set the vibration ratio [0-1] of all toys connected thru the client
+        /// </summary>
+        /// <param name="strength">How strong to make the vibration as a ratio from 0 to 1 (inclusive)</param>
         public async Task SetVibrate(double strength) {
             if (_Client == null) {
                 return;
             }
 
             await Task.WhenAll(_Client.Devices.Select(iter => {
-                return iter.SendVibrateCmd(strength);
+                return iter.VibrateAsync(strength);
             }));
+
+            _CurrentStrengh = strength;
+            DeviceVibrateChangeEvent?.Invoke(this, strength);
+        }
+
+        /// <summary>
+        ///     Get the current vibration strength as let set by <see cref="SetVibrate(double)"/>.
+        ///     If the device is being controlled by something else, the something else may
+        ///     have changed the vibration strength
+        /// </summary>
+        public double GetStrength() {
+            return _CurrentStrengh;
         }
 
     }

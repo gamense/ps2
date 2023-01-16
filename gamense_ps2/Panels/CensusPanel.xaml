@@ -13,9 +13,23 @@
             <TextBox Name="Character_Input" Text="{Binding CharacterName}"></TextBox>
             <Button Name="Character_Input_Button" Click="Character_Input_Button_Click">Add character</Button>
 
+            <Label>Current strength</Label>
+            <TextBlock Name="Show_Strength"></TextBlock>
+
+            <Label>Current level</Label>
+            <TextBlock Name="Show_Level"></TextBlock>
+
+            <Label>Characters</Label>
+            <ListBox Name="Character_List"></ListBox>
+
+            <Label>Actions</Label>
+            <ListBox Name="Action_List" ScrollViewer.VerticalScrollBarVisibility="Visible" VerticalContentAlignment="Top"></ListBox>
+            <Button Name="Action_List_Refresh" Click="Action_List_Refresh_Click">Reload file</Button>
+
             <Label>Mock action</Label>
             <TextBox Name="Mock_Action"></TextBox>
             <Button Name="Mock_Action_Button" Click="Mock_Action_Button_Click">Mock action</Button>
+
         </StackPanel>
             
     </Grid>

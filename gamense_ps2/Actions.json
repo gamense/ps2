@@ -1,0 +1,101 @@
+{
+    "Name": "Default action set",
+    "Actions": [
+        {
+            "Name": "Get a kill",
+            "Key": "Kill",
+            "Value": 20
+        },
+        {
+            "Name": "When you are killed",
+            "Key": "Death",
+            "Value": -5
+        },
+        {
+            "Name": "When you get an assist",
+            "Key": "GainExperience.Source.2",
+            "Value": 5
+        },
+        {
+            "Name": "When you heal another player",
+            "Key": "GainExperience.Source.4",
+            "Value": 2
+        },
+        {
+            "Name": "When you are healed by another player",
+            "Key": "GainExperience.Other.4",
+            "Value": 2
+        },
+        {
+            "Name": "When you repair a MAX suit",
+            "Key": "GainExperience.Source.6",
+            "Value": 1
+        },
+        {
+            "Name": "When you are repaired in a MAX suit",
+            "Key": "GainExperience.Other.6",
+            "Value": 1
+        },
+        {
+            "Name": "When you revive another player",
+            "Key": "GainExperience.Source.7",
+            "Value": 10
+        },
+        {
+            "Name": "When you are revived by another player",
+            "Key": "GainExperience.Other.7",
+            "Value": 5
+        },
+        {
+            "Name": "When you earn a kill streak",
+            "Key": "GainExperience.Source.8",
+            "Value": 5
+        },
+        {
+            "Name": "When you dominate another player (3 kills without dying to them)",
+            "Key": "GainExperience.Source.10",
+            "Value": 15
+        },
+        {
+            "Name": "When you are dominated by another player (you die 3 times without killing them)",
+            "Key": "GainExperience.Other.10",
+            "Value": -50
+        },
+        {
+            "Name": "Headshot bonus",
+            "Key": "GainExperience.Source.37",
+            "Value": 5
+        },
+        {
+            "Name": "When you heal another player (squad)",
+            "Key": "GainExperience.Source.51",
+            "Value": 2
+        },
+        {
+            "Name": "When you are healed by another player (squad)",
+            "Key": "GainExperience.Other.51",
+            "Value": 2
+        },
+        {
+            "Name": "When you revive another player (squad)",
+            "Key": "GainExperience.Source.53",
+            "Value": 10
+        },
+        {
+            "Name": "When you are revived by another player (squad)",
+            "Key": "GainExperience.Other.53",
+            "Value": 5
+        },
+        {
+            "Name": "When you repair a MAX suit (squad)",
+            "Key": "GainExperience.Source.142",
+            "Value": 1
+        },
+        {
+            "Name": "When you are repaired in a MAX suit by another player (squad)",
+            "Key": "GainExperience.Other.142",
+            "Value": 1
+        }
+    ]
+
+}

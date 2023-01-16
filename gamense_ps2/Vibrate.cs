@@ -21,6 +21,7 @@ namespace gamense_ps2 {
         private DateTime _LastEvent;
 
         private int _CurrentStrength = 0;
+        private int _CurrentLevel = 0;
 
         private const int SECONDS_PER_LEVEL = 30;
 
@@ -35,9 +36,6 @@ namespace gamense_ps2 {
             _Timer.Interval = 1000;
             _Timer.Elapsed += _TimerElapsed;
             _Timer.Start();
-
-            SetActionStrength("Kill", 20);
-            SetActionStrength("Death", -5);
         }
 
         public void Dispose() {
@@ -48,19 +46,18 @@ namespace gamense_ps2 {
             TimeSpan diffSpan = args.SignalTime.ToUniversalTime() - _LastEvent;
             int diff = (int)diffSpan.TotalSeconds;
 
-            //int currentLevel = _CurrentStrength / Math.Max(1, Divisions);
-            int currentLevel = (int)(_CurrentStrength / 100d * Divisions);
-            if (currentLevel == 0) {
+            _CurrentLevel = (int)(_CurrentStrength / 100d * Divisions);
+            if (_CurrentLevel == 0) {
                 return;
             }
 
-            int secondsAtThisLevel = SECONDS_PER_LEVEL / currentLevel;
+            int secondsAtThisLevel = SECONDS_PER_LEVEL / _CurrentLevel;
 
-            _Logger.LogInformation($"Timer diff: {diffSpan}/{diff}; level: {currentLevel}/{Divisions}; seconds at: {secondsAtThisLevel}");
+            _Logger.LogInformation($"Timer diff: {diffSpan}/{diff}; level: {_CurrentLevel}/{Divisions}; seconds at: {secondsAtThisLevel}");
 
             if (diff > secondsAtThisLevel) {
-                --currentLevel;
-                double str = currentLevel / (double)Divisions;
+                --_CurrentLevel;
+                double str = _CurrentLevel / (double)Divisions;
 
                 _Logger.LogInformation($"Dropped off, new str {str}");
 
@@ -68,8 +65,8 @@ namespace gamense_ps2 {
                 if (str < 0d) { str = 0d; }
 
                 _ = _ToyWrapper.SetVibrate(str);
-                _CurrentStrength = (int)(currentLevel * (100d / Divisions));
-                _Logger.LogInformation($"New _CurrentStrength: {_CurrentStrength}");
+                _CurrentStrength = (int)(_CurrentLevel * (100d / Divisions));
+                _Logger.LogTrace($"New _CurrentStrength: {_CurrentStrength}, _CurrentLevel: {_CurrentLevel}");
                 _LastEvent = DateTime.UtcNow;
             }
 
@@ -78,6 +75,11 @@ namespace gamense_ps2 {
             // update level if it's changed
         }
 
+        /// <summary>
+        ///     Set how much % this action done will grant (or take away if negative)
+        /// </summary>
+        /// <param name="action">Key of the action</param>
+        /// <param name="strength">Value from 0 to 100 representing how much percentage strength this action will grant</param>
         public void SetActionStrength(string action, int strength) {
             action = action.ToLower();
 
@@ -91,9 +93,17 @@ namespace gamense_ps2 {
             }
         }
 
+        /// <summary>
+        ///     Clear all the actions and their associated strengths
+        /// </summary>
+        public void ClearActionStrengths() {
+            Actions.Clear();
+        }
+
         public async void UpdateOnAction(string action) {
             _Logger.LogInformation($"Action: {action}");
             if (Actions.TryGetValue(action.ToLower(), out int str) == false) {
+                _Logger.LogTrace($"Action {action} does not have a value, not updating vibration strength");
                 return;
             }
 
@@ -101,12 +111,33 @@ namespace gamense_ps2 {
             if (_CurrentStrength > 100) { _CurrentStrength = 100; }
             if (_CurrentStrength < 0) { _CurrentStrength = 0; }
 
-            _Logger.LogInformation($"Action {action} gives {str} strength => {_CurrentStrength}");
+            _Logger.LogDebug($"Action {action} gives {str} strength => {_CurrentStrength}");
 
             _LastEvent = DateTime.UtcNow;
 
             double newStr = _CurrentStrength / 100d;
             await _ToyWrapper.SetVibrate(newStr);
+        }
+
+        /// <summary>
+        ///     Get the value 0-100 that represents the current strength of the toy.
+        /// </summary>
+        public int GetCurrentStrength() {
+            return _CurrentStrength;
+        }
+
+        /// <summary>
+        ///     Get the current vibration level
+        /// </summary>
+        public int GetCurrentLevel() {
+            return _CurrentLevel;
+        }
+
+        /// <summary>
+        ///     Get how many different vibration levels there are
+        /// </summary>
+        public int GetMaxLevel() {
+            return Divisions;
         }
 
     }

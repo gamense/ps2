@@ -9,7 +9,13 @@
     <Grid>
 
         <StackPanel>
+            <Border BorderThickness="2" BorderBrush="Red" Margin="0 0 0 25">
+                <TextBlock TextWrapping="Wrap" Text="Use your sex toys responsibly! Please read the safety instructions of your toy before using it with this application. Closing this application will stop vibration if needed."></TextBlock>
+            </Border>
+
             <TextBlock Text="Connect to toy"></TextBlock>
+
+            <TextBlock Name="App_Status"></TextBlock>
 
             <Button Name="Button_Connect" Click="Button_Connect_Click">
                 Connect
@@ -31,6 +37,7 @@
                 Refresh device list
             </Button>
 
+            <Label>Connected devices:</Label>
             <ListView Name="Device_List">
                 
             </ListView>
