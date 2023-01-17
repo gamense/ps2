@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using gamense_ps2.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +11,17 @@ namespace gamense_ps2 {
 
     public class Vibrate : IDisposable {
 
-        public int Divisions { get; set; } = 5;
-
-        public Dictionary<string, int> Actions { get; } = new();
-
         private readonly ILogger<Vibrate> _Logger;
         private readonly ToyWrapper _ToyWrapper;
 
         private readonly Timer _Timer;
         private DateTime _LastEvent;
 
+        private GameActionSet _ActionSet = new();
+        private Dictionary<string, GameAction> _Actions { get; } = new();
+        
         private int _CurrentStrength = 0;
         private int _CurrentLevel = 0;
-
-        private const int SECONDS_PER_LEVEL = 30;
 
         public Vibrate(ILogger<Vibrate> logger, ToyWrapper toyWrapper) {
             _Logger = logger;
@@ -46,18 +44,18 @@ namespace gamense_ps2 {
             TimeSpan diffSpan = args.SignalTime.ToUniversalTime() - _LastEvent;
             int diff = (int)diffSpan.TotalSeconds;
 
-            _CurrentLevel = (int)(_CurrentStrength / 100d * Divisions);
+            _CurrentLevel = (int)(_CurrentStrength / 100d * _ActionSet.Levels);
             if (_CurrentLevel == 0) {
                 return;
             }
 
-            int secondsAtThisLevel = SECONDS_PER_LEVEL / _CurrentLevel;
+            double secondsAtThisLevel = _ActionSet.DecayTime / ((double)_CurrentLevel * _ActionSet.DecayFactor);
 
-            _Logger.LogInformation($"Timer diff: {diffSpan}/{diff}; level: {_CurrentLevel}/{Divisions}; seconds at: {secondsAtThisLevel}");
+            _Logger.LogInformation($"Timer diff: {diffSpan}/{diff}; level: {_CurrentLevel}/{_ActionSet.Levels}; seconds at: {secondsAtThisLevel:2F}");
 
             if (diff > secondsAtThisLevel) {
                 --_CurrentLevel;
-                double str = _CurrentLevel / (double)Divisions;
+                double str = _CurrentLevel / (double)_ActionSet.Levels;
 
                 _Logger.LogInformation($"Dropped off, new str {str}");
 
@@ -65,7 +63,7 @@ namespace gamense_ps2 {
                 if (str < 0d) { str = 0d; }
 
                 _ = _ToyWrapper.SetVibrate(str);
-                _CurrentStrength = (int)(_CurrentLevel * (100d / Divisions));
+                _CurrentStrength = (int)(_CurrentLevel * (100d / _ActionSet.Levels));
                 _Logger.LogTrace($"New _CurrentStrength: {_CurrentStrength}, _CurrentLevel: {_CurrentLevel}");
                 _LastEvent = DateTime.UtcNow;
             }
@@ -76,44 +74,25 @@ namespace gamense_ps2 {
         }
 
         /// <summary>
-        ///     Set how much % this action done will grant (or take away if negative)
+        ///     Give (or take) points based on an action that occured
         /// </summary>
-        /// <param name="action">Key of the action</param>
-        /// <param name="strength">Value from 0 to 100 representing how much percentage strength this action will grant</param>
-        public void SetActionStrength(string action, int strength) {
-            action = action.ToLower();
-
-            // ensure safe bounds
-            if (strength > 100) { strength = 100; }
-
-            if (Actions.ContainsKey(action)) {
-                Actions[action] = strength;
-            } else {
-                Actions.Add(action, strength);
-            }
-        }
-
-        /// <summary>
-        ///     Clear all the actions and their associated strengths
-        /// </summary>
-        public void ClearActionStrengths() {
-            Actions.Clear();
-        }
-
-        public async void UpdateOnAction(string action) {
-            _Logger.LogInformation($"Action: {action}");
-            if (Actions.TryGetValue(action.ToLower(), out int str) == false) {
-                _Logger.LogTrace($"Action {action} does not have a value, not updating vibration strength");
+        /// <param name="eventAction">string that contains the action that occured</param>
+        public async void UpdateOnAction(string eventAction) {
+            _Logger.LogInformation($"Action: {eventAction}");
+            if (_Actions.TryGetValue(eventAction.ToLower(), out GameAction? action) == false) {
+                _Logger.LogDebug($"Action {eventAction} does not have a value, not updating vibration strength");
                 return;
             }
 
-            _CurrentStrength += str;
+            _CurrentStrength += action.Value;
             if (_CurrentStrength > 100) { _CurrentStrength = 100; }
             if (_CurrentStrength < 0) { _CurrentStrength = 0; }
 
-            _Logger.LogDebug($"Action {action} gives {str} strength => {_CurrentStrength}");
+            _Logger.LogDebug($"Action {eventAction} gives {action.Value} strength => {_CurrentStrength}, notable? {action.Notable}");
 
-            _LastEvent = DateTime.UtcNow;
+            if (action.Notable == true) {
+                _LastEvent = DateTime.UtcNow;
+            }
 
             double newStr = _CurrentStrength / 100d;
             await _ToyWrapper.SetVibrate(newStr);
@@ -134,10 +113,25 @@ namespace gamense_ps2 {
         }
 
         /// <summary>
-        ///     Get how many different vibration levels there are
+        ///     Get the current <see cref="GameActionSet"/> in use
         /// </summary>
-        public int GetMaxLevel() {
-            return Divisions;
+        /// <returns></returns>
+        public GameActionSet GetActionSet() {
+            return _ActionSet;
+        }
+
+        /// <summary>
+        ///     Set the active <see cref="GameActionSet"/> in use
+        /// </summary>
+        /// <param name="set">Action set to set</param>
+        public void SetActionSet(GameActionSet set) {
+            _Logger.LogInformation($"Loading set {set.Name}, {set.Actions.Count} actions defined");
+            _ActionSet = set;
+
+            _Actions.Clear();
+            foreach (GameAction action in set.Actions) {
+                _Actions.Add(action.Key.ToLower(), action);
+            }
         }
 
     }

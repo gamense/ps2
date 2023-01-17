@@ -27,5 +27,10 @@ namespace gamense_ps2.Models {
         /// </summary>
         public int Value { get; set; }
 
+        /// <summary>
+        ///     Will this action reset the decay timer?
+        /// </summary>
+        public bool Notable { get; set; } = false;
+
     }
 }

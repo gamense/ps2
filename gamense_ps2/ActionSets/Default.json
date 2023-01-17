@@ -1,10 +1,14 @@
 {
     "Name": "Default action set",
+    "Levels": 5,
+    "DecayTime": 30,
+    "DecayFactor": 1,
     "Actions": [
         {
             "Name": "Get a kill",
             "Key": "Kill",
-            "Value": 20
+            "Value": 20,
+            "Notable":  true
         },
         {
             "Name": "When you are killed",
@@ -14,7 +18,8 @@
         {
             "Name": "When you get an assist",
             "Key": "GainExperience.Source.2",
-            "Value": 5
+            "Value": 5,
+            "Notable":  true
         },
         {
             "Name": "When you heal another player",
@@ -39,7 +44,8 @@
         {
             "Name": "When you revive another player",
             "Key": "GainExperience.Source.7",
-            "Value": 10
+            "Value": 10,
+            "Notable":  true
         },
         {
             "Name": "When you are revived by another player",
@@ -49,12 +55,14 @@
         {
             "Name": "When you earn a kill streak",
             "Key": "GainExperience.Source.8",
-            "Value": 5
+            "Value": 5,
+            "Notable":  true
         },
         {
             "Name": "When you dominate another player (3 kills without dying to them)",
             "Key": "GainExperience.Source.10",
-            "Value": 15
+            "Value": 15,
+            "Notable":  true
         },
         {
             "Name": "When you are dominated by another player (you die 3 times without killing them)",
@@ -84,7 +92,8 @@
         {
             "Name": "When you revive another player (squad)",
             "Key": "GainExperience.Source.53",
-            "Value": 10
+            "Value": 10,
+            "Notable":  true
         },
         {
             "Name": "When you are revived by another player (squad)",
@@ -109,7 +118,8 @@
         {
             "Name": "When someone shoots your hardlight and then they die",
             "Key": "GainExperience.Source.1394",
-            "Value": 30
+            "Value": 30,
+            "Notable":  true
         },
     ]
 

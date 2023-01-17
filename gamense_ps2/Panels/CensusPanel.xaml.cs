@@ -105,12 +105,12 @@ namespace gamense_ps2.Panels {
         }
 
         private async Task UpdateActionList() {
-            if (File.Exists("./Actions.json") == false) {
-                _Logger.LogWarning($"Failed to find './Actions.json' in {Directory.GetCurrentDirectory()}");
+            if (File.Exists("./ActionSets/Default.json") == false) {
+                _Logger.LogWarning($"Failed to find './ActionSets/Default.json' in {Directory.GetCurrentDirectory()}");
                 return;
             }
 
-            string contents = await File.ReadAllTextAsync("./Actions.json");
+            string contents = await File.ReadAllTextAsync("./ActionSets/Default.json");
             _Logger.LogDebug($"Loaded {contents.Length} characters from json file");
 
             GameActionSet? set = JsonConvert.DeserializeObject<GameActionSet>(contents);
@@ -121,10 +121,7 @@ namespace gamense_ps2.Panels {
 
             _Logger.LogInformation($"Loaded action set {set.Name} with {set.Actions.Count} actions");
 
-            _Vibrate.ClearActionStrengths();
-
             List<string> feedback = new();
-
             HashSet<string> actions = new();
             foreach (GameAction action in set.Actions) {
                 if (actions.Contains(action.Key) == true) {
@@ -134,10 +131,11 @@ namespace gamense_ps2.Panels {
 
                 feedback.Add($"{action.Name} = {action.Value}");
                 actions.Add(action.Key);
-                _Vibrate.SetActionStrength(action.Key, action.Value);
 
                 _Logger.LogTrace($"From action set {set.Name}, action {action.Key} has value of {action.Value}; Name={action.Name}");
             }
+
+            _Vibrate.SetActionSet(set);
 
             Application.Current.Dispatcher.Invoke(delegate {
                 _ActionListSource.Clear();

@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Actions.json">
+    <None Update="ActionSets\Default.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="appsettings.json">
