@@ -62,6 +62,11 @@
             "Value": -50
         },
         {
+            "Name": "When you supply ammo to another player",
+            "Key": "GainExperience.Source.34",
+            "Value": 1
+        },
+        {
             "Name": "Headshot bonus",
             "Key": "GainExperience.Source.37",
             "Value": 5
@@ -87,6 +92,11 @@
             "Value": 5
         },
         {
+            "Name": "When you supply ammo to another player (squad)",
+            "Key": "GainExperience.Source.55",
+            "Value": 1
+        },
+        {
             "Name": "When you repair a MAX suit (squad)",
             "Key": "GainExperience.Source.142",
             "Value": 1
@@ -95,7 +105,12 @@
             "Name": "When you are repaired in a MAX suit by another player (squad)",
             "Key": "GainExperience.Other.142",
             "Value": 1
-        }
+        },
+        {
+            "Name": "When someone shoots your hardlight and then they die",
+            "Key": "GainExperience.Source.1394",
+            "Value": 30
+        },
     ]
 
 }
