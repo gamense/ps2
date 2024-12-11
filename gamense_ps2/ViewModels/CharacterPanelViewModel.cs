@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
-namespace gamense_ps2.ViewModels {
+﻿namespace gamense_ps2.ViewModels {
 
     public class CharacterPanelViewModel : ViewModelBase {
 
