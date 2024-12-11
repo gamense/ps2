@@ -4,13 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
+using ControlzEx.Theming;
 
 namespace gamense_ps2 {
 
@@ -49,17 +45,21 @@ namespace gamense_ps2 {
             services.AddSingleton<CharacterCensus>();
             services.AddSingleton<ToyWrapper>();
             services.AddSingleton<RealtimeStream>();
-            services.AddSingleton<gamense_ps2.Census.EventHandler>();
+            services.AddSingleton<Census.EventHandler>();
             services.AddSingleton<Vibrate>();
         }
 
         protected override async void OnStartup(StartupEventArgs e) {
             await _Host.StartAsync();
-
+            
             MainWindow main = _Host.Services.GetRequiredService<MainWindow>();
             main.Show();
 
             base.OnStartup(e);
+            
+            // set the default theme
+            ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
+            
         }
 
         protected override async void OnExit(ExitEventArgs e) {

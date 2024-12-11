@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace gamense_ps2.Models {
+﻿namespace gamense_ps2.Models {
 
     public class PsCharacter {
 

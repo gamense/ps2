@@ -3,32 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:local="clr-namespace:gamense_ps2.Panels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
 
-        <StackPanel>
-            <Label>Character name</Label>
-            <TextBox Name="Character_Input" Text="{Binding CharacterName}"></TextBox>
-            <Button Name="Character_Input_Button" Click="Character_Input_Button_Click">Add character</Button>
+        <StackPanel Margin="10 0">
+            <Label Margin="0 5 0 0">Character name</Label>
+            <TextBox Name="Character_Input" Text="{Binding CharacterName}" ></TextBox>
+            <Button Name="Character_Input_Button" Click="Character_Input_Button_Click" Margin="0 0 0 5">Add character</Button>
 
-            <Label>Current strength</Label>
-            <TextBlock Name="Show_Strength"></TextBlock>
+            <Label Margin="0 5 0 0">Current strength</Label>
+            <TextBlock Name="Show_Strength" Margin="0 0 0 5"></TextBlock>
 
-            <Label>Current level</Label>
-            <TextBlock Name="Show_Level"></TextBlock>
+            <Label Margin="0 5 0 0">Current level</Label>
+            <TextBlock Name="Show_Level" Margin="0 0 0 5"></TextBlock>
 
-            <Label>Characters</Label>
-            <ListBox Name="Character_List"></ListBox>
+            <Label Margin="0 5 0 0">Characters</Label>
+            <ListBox Name="Character_List" Margin="0 0 0 5"></ListBox>
 
-            <Label>Actions</Label>
-            <ListBox Name="Action_List" ScrollViewer.VerticalScrollBarVisibility="Visible" VerticalContentAlignment="Top"></ListBox>
-            <Button Name="Action_List_Refresh" Click="Action_List_Refresh_Click">Reload file</Button>
+            <Label Margin="0 5 0 0">Actions</Label>
+            <ListBox Height="200px" Name="Action_List" ScrollViewer.VerticalScrollBarVisibility="Visible" VerticalContentAlignment="Top"></ListBox>
+            <Button Name="Action_List_Refresh" Click="Action_List_Refresh_Click" Margin="0 0 0 5">Reload file</Button>
 
-            <Label>Mock action</Label>
+            <Label Margin="0 5 0 0">Mock action</Label>
             <TextBox Name="Mock_Action"></TextBox>
-            <Button Name="Mock_Action_Button" Click="Mock_Action_Button_Click">Mock action</Button>
+            <Button Name="Mock_Action_Button" Click="Mock_Action_Button_Click" Margin="0 0 0 5">Mock action</Button>
 
         </StackPanel>
             

@@ -1,14 +1,9 @@
-﻿using Buttplug;
-using Buttplug.Client;
+﻿using Buttplug.Client;
 using Buttplug.Client.Connectors.WebsocketConnector;
-using gamense_ps2.Code;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace gamense_ps2 {
@@ -20,7 +15,7 @@ namespace gamense_ps2 {
         private ButtplugClient? _Client = null;
         private ButtplugWebsocketConnector? _Connector = null;
 
-        private double _CurrentStrengh = 0d;
+        private double _CurrentStrength = 0d;
 
         public ToyWrapper(ILogger<ToyWrapper> logger) {
             _Logger = logger;
@@ -65,12 +60,12 @@ namespace gamense_ps2 {
             _Connector = new ButtplugWebsocketConnector(new Uri("ws://localhost:12345/buttplug"));
             _Client = new ButtplugClient("Test client");
 
-            _Client.DeviceAdded += (obj, args) => {
+            _Client.DeviceAdded += (_, args) => {
                 _Logger.LogInformation($"Device added {args.Device.DisplayName}/{args.Device.Name}");
                 DeviceAddedEvent?.Invoke(this, args);
             };
 
-            _Client.DeviceRemoved += (obj, args) => {
+            _Client.DeviceRemoved += (_, args) => {
                 _Logger.LogInformation($"Device removed: {args.Device.DisplayName}/{args.Device.Name}");
                 DeviceRemovedEvent?.Invoke(this, args);
             };
@@ -147,7 +142,7 @@ namespace gamense_ps2 {
         }
 
         /// <summary>
-        ///     Set the vibration ratio [0-1] of all toys connected thru the client
+        ///     Set the vibration ratio [0-1] of all toys connected through the client
         /// </summary>
         /// <param name="strength">How strong to make the vibration as a ratio from 0 to 1 (inclusive)</param>
         public async Task SetVibrate(double strength) {
@@ -159,7 +154,7 @@ namespace gamense_ps2 {
                 return iter.VibrateAsync(strength);
             }));
 
-            _CurrentStrengh = strength;
+            _CurrentStrength = strength;
             DeviceVibrateChangeEvent?.Invoke(this, strength);
         }
 
@@ -169,7 +164,7 @@ namespace gamense_ps2 {
         ///     have changed the vibration strength
         /// </summary>
         public double GetStrength() {
-            return _CurrentStrengh;
+            return _CurrentStrength;
         }
 
     }

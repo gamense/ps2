@@ -1,22 +1,23 @@
-﻿<Window x:Class="gamense_ps2.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:gamense_ps2"
-        xmlns:panels="clr-namespace:gamense_ps2.Panels"
-        mc:Ignorable="d"
-        Title="PS2 Gamense" Height="450" Width="800">
+﻿<mah:MetroWindow x:Class="gamense_ps2.MainWindow"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+            xmlns:local="clr-namespace:gamense_ps2"
+            xmlns:panels="clr-namespace:gamense_ps2.Panels"
+            mc:Ignorable="d"
+            Title="PS2 Gamense" Height="655" Width="800">
     <Grid>
 
-        <TabControl>
-            <TabItem Header="Connect to toy">
+        <mah:MetroTabControl>
+            <mah:MetroTabItem Header="Connect to toy">
                 <panels:ConnectPanel></panels:ConnectPanel>
-            </TabItem>
-            <TabItem Header="Setup actions">
+            </mah:MetroTabItem>
+            <mah:MetroTabItem Header="Setup actions">
                 <panels:CensusPanel></panels:CensusPanel>
-            </TabItem>
-        </TabControl>
+            </mah:MetroTabItem>
+        </mah:MetroTabControl>
 
     </Grid>
-</Window>
+</mah:MetroWindow>

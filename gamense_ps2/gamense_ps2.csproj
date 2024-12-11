@@ -11,6 +11,7 @@
     <PackageReference Include="Buttplug" Version="3.0.0" />
     <PackageReference Include="Buttplug.Client.Connectors.WebsocketConnector" Version="3.0.0" />
     <PackageReference Include="DaybreakGames.Census" Version="3.2.2" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
