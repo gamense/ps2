@@ -38,6 +38,7 @@ namespace gamense_ps2 {
             services.AddSingleton<MainWindow>();
             services.AddSingleton<CensusPanel>();
             services.AddSingleton<ConnectPanel>();
+            services.AddSingleton<SettingsPanel>();
 
             services.AddLogging();
             services.AddCensusServices();
@@ -56,9 +57,6 @@ namespace gamense_ps2 {
             main.Show();
 
             base.OnStartup(e);
-            
-            // set the default theme
-            ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
             
         }
 

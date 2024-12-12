@@ -99,7 +99,7 @@ namespace gamense_ps2.Panels {
             }
         }
 
-        private async void Button_Close_Disclaimer_Click(object sender, RoutedEventArgs e) {
+        private void Button_Close_Disclaimer_Click(object sender, RoutedEventArgs e) {
             Border_Disclaimer.Visibility = Visibility.Collapsed;
         }
 

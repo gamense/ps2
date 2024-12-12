@@ -21,11 +21,11 @@ namespace gamense_ps2.Census {
             _Census = census;
         }
 
-        public async Task<PsCharacter?> GetByID(string ID) {
-            _Logger.LogInformation($"Getting character by ID: {ID}");
-
-            return null;
-        }
+        //public async Task<PsCharacter?> GetByID(string ID) {
+        //    _Logger.LogInformation($"Getting character by ID: {ID}");
+        //
+        //    return null;
+        //}
 
         public async Task<PsCharacter?> GetByName(string name) {
             CensusQuery query = _Census.Create("character");

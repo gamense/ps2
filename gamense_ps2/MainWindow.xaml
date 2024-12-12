@@ -17,6 +17,9 @@
             <mah:MetroTabItem Header="Setup actions">
                 <panels:CensusPanel></panels:CensusPanel>
             </mah:MetroTabItem>
+            <mah:MetroTabItem Header="Settings">
+                <panels:SettingsPanel></panels:SettingsPanel>
+            </mah:MetroTabItem>
         </mah:MetroTabControl>
 
     </Grid>
