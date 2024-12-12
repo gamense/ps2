@@ -14,9 +14,11 @@
             <mah:MetroTabItem Header="Connect to toy">
                 <panels:ConnectPanel></panels:ConnectPanel>
             </mah:MetroTabItem>
+            <Separator/>
             <mah:MetroTabItem Header="Setup actions">
                 <panels:CensusPanel></panels:CensusPanel>
             </mah:MetroTabItem>
+            <Separator/>
             <mah:MetroTabItem Header="Settings">
                 <panels:SettingsPanel></panels:SettingsPanel>
             </mah:MetroTabItem>

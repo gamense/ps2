@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using ControlzEx.Theming;
+using gamense_ps2.Models;
 
 namespace gamense_ps2 {
 
@@ -42,7 +43,7 @@ namespace gamense_ps2 {
 
             services.AddLogging();
             services.AddCensusServices();
-
+            
             services.AddSingleton<CharacterCensus>();
             services.AddSingleton<ToyWrapper>();
             services.AddSingleton<RealtimeStream>();

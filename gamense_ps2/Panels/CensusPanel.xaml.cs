@@ -23,7 +23,8 @@ namespace gamense_ps2.Panels {
         private readonly CharacterCensus _CharacterCensus;
         private readonly RealtimeStream _RealtimeStream;
         private readonly Vibrate _Vibrate;
-
+        private readonly Settings _Settings;
+        
         private readonly Timer _Timer;
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace gamense_ps2.Panels {
         /// </summary>
         private ObservableCollection<string> _ActionListSource = new();
 
-        private List<PsCharacter> _SubscribedCharacters = new();
+        private ObservableCollection<PsCharacter> _SubscribedCharacters;
 
         /// <summary>
         ///     Source for listing the characters subscribed to
@@ -45,7 +46,9 @@ namespace gamense_ps2.Panels {
             _CharacterCensus = App.Services.GetRequiredService<CharacterCensus>();
             _RealtimeStream = App.Services.GetRequiredService<RealtimeStream>();
             _Vibrate = App.Services.GetRequiredService<Vibrate>();
-
+            
+            _Settings = Settings.Instance;
+            
             _Timer = new Timer();
             _Timer.AutoReset = true;
             _Timer.Interval = 1000;
@@ -53,10 +56,21 @@ namespace gamense_ps2.Panels {
             _Timer.Start();
 
             _ = UpdateActionList();
+            
+            _SubscribedCharacters = _Settings.SubscribedCharacters;
+            foreach (var character in _SubscribedCharacters)
+            {
+                _RealtimeStream.SubscribeToCharacterID(character.ID);
+                _Logger.LogInformation($"Added {character.ID}/{character.Name} to realtime subscription");
+            }
+            
+            UpdateCharacterList();
+            
         }
 
-        private async void Character_Input_Button_Click(object sender, RoutedEventArgs e) {
-            string charName = Character_Input.Text;
+        private async Task AddCharacter(string charName)
+        {
+            
             Console.WriteLine($"Adding {charName} to subscription");
 
             PsCharacter? c = null;
@@ -77,6 +91,11 @@ namespace gamense_ps2.Panels {
             _RealtimeStream.SubscribeToCharacterID(c.ID);
             _Logger.LogInformation($"Added {c.ID}/{c.Name} to realtime subscription");
             UpdateCharacterList();
+        }
+        
+        private async void Character_Input_Button_Click(object sender, RoutedEventArgs e) {
+            string charName = Character_Input.Text;
+            await AddCharacter(charName);
         }
 
         private void Mock_Action_Button_Click(object sender, RoutedEventArgs e) {
